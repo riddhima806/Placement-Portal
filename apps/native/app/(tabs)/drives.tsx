@@ -8,11 +8,16 @@ import {
   Award,
   Clock,
   ChevronRight,
+  ExternalLink,
 } from "lucide-react-native";
 import { useState } from "react";
+import { useRouter } from "expo-router";
+import { Link } from "expo-router";
+import { Linking } from "react-native";
 
 // Sub-component for Drive Card
 function DriveCard({
+  id,
   company,
   role,
   location,
@@ -21,6 +26,7 @@ function DriveCard({
   deadline,
   status,
 }: {
+  id: string;
   company: string;
   role: string;
   location: string;
@@ -29,6 +35,8 @@ function DriveCard({
   deadline: string;
   status: "open" | "closing-soon" | "registered";
 }) {
+  const router = useRouter();
+
   const getStatusColor = () => {
     switch (status) {
       case "open":
@@ -52,51 +60,58 @@ function DriveCard({
   };
 
   return (
-    <TouchableOpacity className="bg-white rounded-2xl p-5 mb-4 shadow-sm">
-      <View className="flex-row items-start justify-between mb-4">
-        <View className="flex-1">
-          <Text className="text-lg font-bold text-gray-900 mb-1">
-            {company}
-          </Text>
-          <Text className="text-sm text-gray-600">{role}</Text>
+    <Link asChild href={{
+      pathname:'/drives/[id]',
+      params:{id:id}
+    }}>
+      <TouchableOpacity
+        className="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100"
+      >
+        <View className="flex-row items-start justify-between mb-4">
+          <View className="flex-1">
+            <Text className="text-lg font-bold text-gray-900 mb-1">
+              {company}
+            </Text>
+            <Text className="text-sm text-gray-600">{role}</Text>
+          </View>
+          <View className={`rounded-full px-3 py-1 ${getStatusColor()}`}>
+            <Text className="text-xs font-semibold">{getStatusText()}</Text>
+          </View>
         </View>
-        <View className={`rounded-full px-3 py-1 ${getStatusColor()}`}>
-          <Text className="text-xs font-semibold">{getStatusText()}</Text>
-        </View>
-      </View>
 
-      <View className="space-y-2 mb-4">
-        <View className="flex-row items-center">
-          <MapPin size={16} color="#6b7280" />
-          <Text className="text-sm text-gray-600 ml-2">{location}</Text>
+        <View className="space-y-2 mb-4">
+          <View className="flex-row items-center">
+            <MapPin size={16} color="#6b7280" />
+            <Text className="text-sm text-gray-600 ml-2">{location}</Text>
+          </View>
+          <View className="flex-row items-center">
+            <Calendar size={16} color="#6b7280" />
+            <Text className="text-sm text-gray-600 ml-2">{date}</Text>
+          </View>
+          <View className="flex-row items-center">
+            <Users size={16} color="#6b7280" />
+            <Text className="text-sm text-gray-600 ml-2">
+              {applicants} applicants
+            </Text>
+          </View>
         </View>
-        <View className="flex-row items-center">
-          <Calendar size={16} color="#6b7280" />
-          <Text className="text-sm text-gray-600 ml-2">{date}</Text>
-        </View>
-        <View className="flex-row items-center">
-          <Users size={16} color="#6b7280" />
-          <Text className="text-sm text-gray-600 ml-2">
-            {applicants} applicants
-          </Text>
-        </View>
-      </View>
 
-      <View className="border-t border-gray-100 pt-3 flex-row items-center justify-between">
-        <View className="flex-row items-center">
-          <Clock size={14} color="#a53c3c" />
-          <Text className="text-xs text-gray-500 ml-1">
-            Deadline: {deadline}
-          </Text>
+        <View className="border-t border-gray-100 pt-3 flex-row items-center justify-between">
+          <View className="flex-row items-center">
+            <Clock size={14} color="#ef4444" />
+            <Text className="text-xs text-gray-500 ml-1">
+              Deadline: {deadline}
+            </Text>
+          </View>
+          <View className="flex-row items-center">
+            <Text className="text-sm font-semibold text-blue-600 mr-1">
+              View Details
+            </Text>
+            <ChevronRight size={16} color="#2563eb" />
+          </View>
         </View>
-        <TouchableOpacity className="flex-row items-center">
-          <Text className="text-sm font-semibold text-[#a53c3c] mr-1">
-            View Details
-          </Text>
-          <ChevronRight size={16} color="#a53c3c" />
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </Link>
   );
 }
 
@@ -109,6 +124,7 @@ function HackathonCard({
   deadline,
   participants,
   status,
+  unstopLink,
 }: {
   title: string;
   organizer: string;
@@ -117,6 +133,7 @@ function HackathonCard({
   deadline: string;
   participants: string;
   status: "open" | "ending-soon" | "registered";
+  unstopLink: string;
 }) {
   const getDifficultyColor = () => {
     switch (difficulty) {
@@ -151,8 +168,15 @@ function HackathonCard({
     }
   };
 
+  const handlePress = () => {
+    Linking.openURL(unstopLink);
+  };
+
   return (
-    <TouchableOpacity className="bg-white rounded-2xl p-5 mb-4 shadow-sm">
+    <TouchableOpacity
+      className="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100"
+      onPress={handlePress}
+    >
       <View className="flex-row items-start justify-between mb-3">
         <View className="flex-1 mr-2">
           <Text className="text-lg font-bold text-gray-900 mb-1">{title}</Text>
@@ -185,8 +209,12 @@ function HackathonCard({
         </View>
       </View>
 
-      <TouchableOpacity className="bg-gray-900 rounded-xl py-3 items-center">
-        <Text className="text-white font-semibold">Register Now</Text>
+      <TouchableOpacity
+        className="bg-blue-600 rounded-xl py-3 items-center flex-row justify-center"
+        onPress={handlePress}
+      >
+        <Text className="text-white font-semibold mr-2">View on Unstop</Text>
+        <ExternalLink size={16} color="#ffffff" />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -198,7 +226,7 @@ export default function Drives() {
   return (
     <Container>
       {/* Header */}
-      <View className="bg-white px-6 pt-12 pb-4 shadow-sm">
+      <View className="bg-white px-6 pt-12 pb-4">
         <Text className="text-2xl font-bold text-gray-900 mb-1">
           Opportunities
         </Text>
@@ -208,11 +236,11 @@ export default function Drives() {
       </View>
 
       {/* Tab Selector */}
-      <View className="bg-white px-6 py-4 flex-row">
+      <View className="bg-white px-6 py-4 flex-row border-b border-gray-200">
         <TouchableOpacity
           onPress={() => setActiveTab("drives")}
           className={`flex-1 py-3 rounded-xl mr-2 ${
-            activeTab === "drives" ? "bg-gray-900" : "bg-gray-100"
+            activeTab === "drives" ? "bg-blue-600" : "bg-gray-100"
           }`}
         >
           <View className="flex-row items-center justify-center">
@@ -233,7 +261,7 @@ export default function Drives() {
         <TouchableOpacity
           onPress={() => setActiveTab("hackathons")}
           className={`flex-1 py-3 rounded-xl ml-2 ${
-            activeTab === "hackathons" ? "bg-gray-900" : "bg-gray-100"
+            activeTab === "hackathons" ? "bg-blue-600" : "bg-gray-100"
           }`}
         >
           <View className="flex-row items-center justify-center">
@@ -256,6 +284,7 @@ export default function Drives() {
         {activeTab === "drives" ? (
           <>
             <DriveCard
+              id="techcorp-swe-2025"
               company="TechCorp Solutions"
               role="Software Engineer"
               location="On-Campus"
@@ -265,6 +294,7 @@ export default function Drives() {
               status="open"
             />
             <DriveCard
+              id="innovatelabs-fsd-2025"
               company="InnovateLabs"
               role="Full Stack Developer"
               location="Virtual"
@@ -274,6 +304,7 @@ export default function Drives() {
               status="closing-soon"
             />
             <DriveCard
+              id="datasystems-analyst-2025"
               company="DataSystems Inc"
               role="Data Analyst"
               location="Hybrid"
@@ -283,6 +314,7 @@ export default function Drives() {
               status="registered"
             />
             <DriveCard
+              id="cloudtech-devops-2025"
               company="CloudTech"
               role="DevOps Engineer"
               location="On-Campus"
@@ -302,6 +334,7 @@ export default function Drives() {
               deadline="Oct 30, 2025"
               participants="1,245"
               status="open"
+              unstopLink="https://unstop.com/hackathons"
             />
             <HackathonCard
               title="Web3 Building Blocks"
@@ -311,6 +344,7 @@ export default function Drives() {
               deadline="Oct 18, 2025"
               participants="892"
               status="ending-soon"
+              unstopLink="https://unstop.com/hackathons"
             />
             <HackathonCard
               title="Green Tech Solutions"
@@ -320,6 +354,7 @@ export default function Drives() {
               deadline="Nov 5, 2025"
               participants="2,156"
               status="registered"
+              unstopLink="https://unstop.com/hackathons"
             />
             <HackathonCard
               title="FinTech Revolution"
@@ -329,6 +364,7 @@ export default function Drives() {
               deadline="Nov 12, 2025"
               participants="3,421"
               status="open"
+              unstopLink="https://unstop.com/hackathons"
             />
           </>
         )}
