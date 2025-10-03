@@ -1,6 +1,6 @@
 import { Container } from "@/components/container";
 import { ScrollView, Text, View, Image, TouchableOpacity } from "react-native";
-import { Bell, Calendar, Users, TrendingUp, Clock } from "lucide-react-native";
+import { Bell, Calendar, Users, TrendingUp, Clock, MapPin, Search, Briefcase } from "lucide-react-native";
 import { Link } from "expo-router";
 
 // Sub-component for stat cards
@@ -16,8 +16,8 @@ function StatCard({
   return (
     <View className="flex-1 bg-white rounded-2xl p-4 shadow-sm mx-1">
       <View className="items-center">
-        <View className="bg-zinc-100 rounded-full p-3 mb-2">
-          <Icon size={24} color="#374151" />
+        <View className="bg-red-50 rounded-full p-3 mb-2">
+          <Icon size={24} color="#A43C3B" />
         </View>
         <Text className="text-2xl font-bold text-foreground mb-1">{value}</Text>
         <Text className="text-xs text-muted-foreground text-center">
@@ -28,41 +28,53 @@ function StatCard({
   );
 }
 
-// Sub-component for drive cards
-function DriveCard({
+// Sub-component for job cards
+function JobCard({
   company,
   role,
-  date,
-  status,
+  location,
+  type,
+  salary,
   logoUrl,
 }: {
   company: string;
   role: string;
-  date: string;
-  status: string;
+  location: string;
+  type: string;
+  salary: string;
   logoUrl: string;
 }) {
   return (
-    <View className="bg-white rounded-2xl p-4 mr-4 shadow-sm w-64">
-      <View className="flex-row items-center mb-3">
-        <View className="bg-zinc-100 rounded-full w-12 h-12 items-center justify-center mr-3 overflow-hidden">
-          <Image
-            source={{ uri: logoUrl }}
-            className="w-8 h-8"
-            resizeMode="contain"
-          />
+    <View className="bg-white rounded-2xl p-4 mr-4 shadow-sm w-72">
+      <View className="flex-row items-start justify-between mb-3">
+        <View className="flex-row items-center flex-1">
+          <View className="bg-zinc-100 rounded-xl w-12 h-12 items-center justify-center mr-3 overflow-hidden">
+            <Image
+              source={{ uri: logoUrl }}
+              className="w-8 h-8"
+              resizeMode="contain"
+            />
+          </View>
+          <View className="flex-1">
+            <Text className="text-base font-bold text-foreground mb-1">{role}</Text>
+            <Text className="text-sm text-muted-foreground">{company}</Text>
+          </View>
         </View>
-        <View className="flex-1">
-          <Text className="text-base font-bold text-foreground">{company}</Text>
-          <Text className="text-sm text-muted-foreground">{role}</Text>
-        </View>
+        <TouchableOpacity className="p-1">
+          <View className="w-6 h-6 items-center justify-center">
+            <Text className="text-lg text-gray-400">♡</Text>
+          </View>
+        </TouchableOpacity>
       </View>
       <View className="flex-row items-center mb-2">
-        <Calendar size={14} color="#6b7280" />
-        <Text className="text-xs text-muted-foreground ml-2">{date}</Text>
+        <MapPin size={14} color="#6b7280" />
+        <Text className="text-xs text-muted-foreground ml-1">{location}</Text>
       </View>
-      <View className="bg-zinc-100 rounded-full px-3 py-1 self-start">
-        <Text className="text-xs text-gray-700 font-semibold">{status}</Text>
+      <View className="flex-row items-center mb-3">
+        <View className="bg-zinc-100 rounded-full px-3 py-1 mr-2">
+          <Text className="text-xs text-gray-700 font-semibold">{type}</Text>
+        </View>
+        <Text className="text-sm font-bold text-[#A43C3B]">{salary}</Text>
       </View>
     </View>
   );
@@ -80,8 +92,8 @@ function NotificationItem({
 }) {
   return (
     <View className="bg-white rounded-xl p-4 mb-3 shadow-sm flex-row items-center">
-      <View className="bg-zinc-100 rounded-full p-2 mr-3">
-        <Icon size={18} color="#6b7280" />
+      <View className="bg-red-50 rounded-full p-2 mr-3">
+        <Icon size={18} color="#A43C3B" />
       </View>
       <View className="flex-1">
         <Text className="text-sm text-foreground mb-1">{text}</Text>
@@ -94,24 +106,42 @@ function NotificationItem({
 export default function TabOne() {
   return (
     <Container>
-      {/* Top Bar */}
-      <View className="bg-white px-6 pt-12 pb-4 shadow-sm">
-        <View className="flex-row items-center justify-between">
+      {/* Top Bar with Red Theme */}
+      <View className="bg-[#A43C3B] px-6 pt-12 pb-6 rounded-b-3xl">
+        <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center flex-1">
-            <View className="w-12 h-12 rounded-full bg-zinc-200 items-center justify-center mr-3">
-              <Text className="text-gray-700 font-bold text-lg">J</Text>
+            <View className="w-12 h-12 rounded-full bg-white/20 items-center justify-center mr-3">
+              <Text className="text-white font-bold text-lg">J</Text>
             </View>
             <View>
-              <Text className="text-xs text-muted-foreground">
+              <Text className="text-xs text-white/70">
                 Welcome back
               </Text>
-              <Text className="text-lg font-bold text-foreground">
+              <Text className="text-lg font-bold text-white">
                 John Doe
               </Text>
             </View>
           </View>
-          <TouchableOpacity className="w-10 h-10 rounded-full bg-zinc-100 items-center justify-center">
-            <Bell size={20} color="#374151" />
+          <TouchableOpacity className="w-10 h-10 rounded-full bg-white/20 items-center justify-center">
+            <Bell size={20} color="#ffffff" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Location Dropdown */}
+        <View className="flex-row items-center mb-4">
+          <MapPin size={16} color="#ffffff" />
+          <Text className="text-white text-sm font-medium ml-1">New York, USA</Text>
+          <Text className="text-white text-sm ml-1">▼</Text>
+        </View>
+
+        {/* Search Bar */}
+        <View className="flex-row items-center">
+          <View className="flex-1 bg-white rounded-xl px-4 py-3 flex-row items-center mr-3">
+            <Search size={20} color="#6b7280" />
+            <Text className="text-gray-400 ml-2">Search</Text>
+          </View>
+          <TouchableOpacity className="bg-yellow-400 rounded-xl p-3">
+            <Briefcase size={24} color="#000000" />
           </TouchableOpacity>
         </View>
       </View>
@@ -126,16 +156,16 @@ export default function TabOne() {
           </View>
         </View>
 
-        {/* Upcoming Drives Section */}
+        {/* Suggested Jobs Section */}
         <View className="pt-2 pb-4">
           <View className="flex-row justify-between items-center px-6 mb-4">
             <Text className="text-xl font-bold text-foreground">
-              Upcoming Drives
+              Suggested Jobs
             </Text>
             <Link href={"/(tabs)/drives"} asChild>
               <TouchableOpacity>
-                <Text className="text-sm text-gray-700 font-semibold">
-                  View All
+                <Text className="text-sm text-[#A43C3B] font-semibold">
+                  See all
                 </Text>
               </TouchableOpacity>
             </Link>
@@ -145,25 +175,28 @@ export default function TabOne() {
             showsHorizontalScrollIndicator={false}
             className="px-6"
           >
-            <DriveCard
-              company="Apple"
-              role="Software Engineer"
-              date="Oct 15, 2025"
-              status="Registered"
+            <JobCard
+              company="BrioSoft Solutions"
+              role="UI Designer"
+              location="New York, USA"
+              type="Full-Time"
+              salary="$42k - $48k"
               logoUrl="https://purepng.com/public/uploads/large/purepng.com-apple-logologobrand-logoiconslogos-251519938788qhgdl.png"
             />
-            <DriveCard
-              company="Microsoft"
-              role="Full Stack Developer"
-              date="Oct 20, 2025"
-              status="Upcoming"
+            <JobCard
+              company="AmplifyAvenue"
+              role="React Developer"
+              location="Remote"
+              type="Contract"
+              salary="$50k - $65k"
               logoUrl="https://purepng.com/public/uploads/large/purepng.com-apple-logologobrand-logoiconslogos-251519938788qhgdl.png"
             />
-            <DriveCard
-              company="Google"
+            <JobCard
+              company="TechFlow Inc"
               role="Data Analyst"
-              date="Oct 25, 2025"
-              status="Open"
+              location="San Francisco, USA"
+              type="Part-Time"
+              salary="$35k - $42k"
               logoUrl="https://purepng.com/public/uploads/large/purepng.com-apple-logologobrand-logoiconslogos-251519938788qhgdl.png"
             />
           </ScrollView>
@@ -176,7 +209,7 @@ export default function TabOne() {
               Notifications
             </Text>
             <TouchableOpacity>
-              <Text className="text-sm text-gray-700 font-semibold">
+              <Text className="text-sm text-[#A43C3B] font-semibold">
                 Mark All Read
               </Text>
             </TouchableOpacity>
