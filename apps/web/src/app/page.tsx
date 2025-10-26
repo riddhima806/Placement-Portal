@@ -67,7 +67,7 @@ export default function Home() {
     <div className="relative">
       <img
         className="fixed h-screen w-screen opacity-50 z-0"
-        src="https://portal.svkm.ac.in/MPSTME-NM-M/resources/images/homeBg.jpg"
+        src="/bg.png"
         alt="Background"
       />
       <section className="relative z-20 min-h-screen">
